@@ -1,0 +1,151 @@
+-- ============================================================
+--  ESQUEMA DE BASE DE DATOS — Centro Logístico
+--  Motor:   SQLite 3.x
+--  Archivo: inventario_general_2.db
+--  Fecha:   2026-05-10
+-- ============================================================
+--  Este script reconstruye el modelo de datos productivo del
+--  sistema (tablas TipoProducto, Presentacion, Ubicacion,
+--  Producto, LoteExistencia, usuarios). Los nombres se
+--  conservan tal y como los consume el código Java de los DAO.
+-- ============================================================
+
+PRAGMA foreign_keys = ON;
+PRAGMA journal_mode = WAL;
+
+-- ── Limpieza opcional (úsala con cuidado) ─────────────────────
+-- DROP TABLE IF EXISTS LoteExistencia;
+-- DROP TABLE IF EXISTS Producto;
+-- DROP TABLE IF EXISTS Presentacion;
+-- DROP TABLE IF EXISTS TipoProducto;
+-- DROP TABLE IF EXISTS Ubicacion;
+-- DROP TABLE IF EXISTS usuarios;
+
+-- ============================================================
+--  1) Catálogos
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS TipoProducto (
+    id_tipo INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre  TEXT    NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS Presentacion (
+    id_presentacion INTEGER PRIMARY KEY AUTOINCREMENT,
+    descripcion     TEXT    NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS Ubicacion (
+    id_ubicacion INTEGER PRIMARY KEY AUTOINCREMENT,
+    descripcion  TEXT    NOT NULL UNIQUE
+);
+
+-- ============================================================
+--  2) Productos del inventario
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS Producto (
+    id_producto     INTEGER PRIMARY KEY AUTOINCREMENT,
+    codigo          TEXT    NOT NULL,
+    invima          TEXT,
+    nombre          TEXT    NOT NULL,
+    id_presentacion INTEGER NOT NULL,
+    id_tipo         INTEGER NOT NULL,
+    FOREIGN KEY (id_presentacion) REFERENCES Presentacion(id_presentacion),
+    FOREIGN KEY (id_tipo)         REFERENCES TipoProducto(id_tipo)
+);
+
+-- ============================================================
+--  3) Existencias y lotes
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS LoteExistencia (
+    id_lote           INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_producto       INTEGER NOT NULL,
+    id_ubicacion      INTEGER NOT NULL,
+    lote              TEXT,
+    fecha_vencimiento TEXT,
+    existencias       INTEGER NOT NULL DEFAULT 0,
+    costo             REAL    NOT NULL DEFAULT 0.0,
+    FOREIGN KEY (id_producto)  REFERENCES Producto(id_producto)   ON DELETE CASCADE,
+    FOREIGN KEY (id_ubicacion) REFERENCES Ubicacion(id_ubicacion) ON DELETE SET NULL
+);
+
+-- ============================================================
+--  4) Usuarios y autenticación
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS usuarios (
+    id_usuario    INTEGER PRIMARY KEY AUTOINCREMENT,
+    username      TEXT    NOT NULL UNIQUE,
+    password_hash TEXT    NOT NULL,
+    rol           TEXT    NOT NULL DEFAULT 'OPERADOR'
+                  CHECK (rol IN ('ADMIN','OPERADOR','LECTURA')),
+    activo        INTEGER NOT NULL DEFAULT 1
+);
+
+-- ============================================================
+--  5) Índices de desempeño
+-- ============================================================
+
+CREATE INDEX IF NOT EXISTS idx_producto_nombre   ON Producto(nombre);
+CREATE INDEX IF NOT EXISTS idx_producto_codigo   ON Producto(codigo);
+CREATE INDEX IF NOT EXISTS idx_producto_tipo     ON Producto(id_tipo);
+CREATE INDEX IF NOT EXISTS idx_lote_vencimiento  ON LoteExistencia(fecha_vencimiento);
+CREATE INDEX IF NOT EXISTS idx_lote_producto     ON LoteExistencia(id_producto);
+CREATE INDEX IF NOT EXISTS idx_usuarios_username ON usuarios(username);
+
+-- ============================================================
+--  6) Datos semilla
+-- ============================================================
+
+--  Tipos de producto
+INSERT OR IGNORE INTO TipoProducto(id_tipo, nombre) VALUES
+    (1, 'Bienes  devolutivos'),
+    (2, 'Medicamento'),
+    (3, 'Insumos');
+
+--  Presentaciones
+INSERT OR IGNORE INTO Presentacion(id_presentacion, descripcion) VALUES
+    (1,  'Lata 8 onzas'),
+    (2,  'Caja x 50'),
+    (3,  'Frasco x 400 ml'),
+    (4,  'Paquete'),
+    (5,  'Tableta'),
+    (6,  'Ampolla'),
+    (7,  'Jarabe'),
+    (8,  'Crema'),
+    (9,  'Sobre'),
+    (10, 'Unidad'),
+    (11, 'Caja'),
+    (12, 'Galón'),
+    (13, 'Botella'),
+    (14, 'Bolsa');
+
+--  Ubicaciones
+INSERT OR IGNORE INTO Ubicacion(id_ubicacion, descripcion) VALUES
+    (1,  'Depósito Sur - Pasillo A'),
+    (2,  'Centro Logístico - Zona 2'),
+    (3,  'Centro Logistico  FCV'),
+    (4,  'Almacén Central - Rack 1'),
+    (5,  'Depósito Norte - Nivel 2'),
+    (6,  'Bodega A - Pasillo 1'),
+    (7,  'Bodega A - Pasillo 2'),
+    (8,  'Bodega B - Rack 3'),
+    (9,  'Bodega B - Rack 4'),
+    (10, 'Bodega C - Nivel 1'),
+    (11, 'Bodega C - Nivel 2'),
+    (12, 'Cuarentena'),
+    (13, 'Devoluciones');
+
+--  Usuario administrador por defecto
+--  Contraseña: admin123  (SHA-256, sin sal — sólo compatibilidad)
+INSERT OR IGNORE INTO usuarios(username, password_hash, rol, activo) VALUES
+    ('admin',
+     '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9',
+     'ADMIN',
+     1);
+
+-- ============================================================
+--  Fin del script
+-- ============================================================

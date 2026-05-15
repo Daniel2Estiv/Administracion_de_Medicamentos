@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/dao/ProductoDAO.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/Interfaz/MenuPrincipal.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/Interfaz/PanelInventario.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/dao/InsumoDAO.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/dao/LoteExistenciaDAO.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/dao/BienesDevolutivosDAO.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/util/ConexionBD.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/Interfaz/PanelBienesDevolutivos.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/dao/PresentacionDAO.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/Interfaz/ConsultaInsumo.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Imagenes/boceto_bodega.png</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/modelo/ItemBodega.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/dao/MedicamentosDAO.java</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Bd/schema_completo_%20PROYECTO%20POO.txt</file>
+            <file>file:/C:/Users/pci/Downloads/Proyecto_CentroLogistico/src/Centro/Interfaz/Login.java</file>
+        </group>
+    </open-files>
+</project-private>
